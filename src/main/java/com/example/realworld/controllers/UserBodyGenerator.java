@@ -6,8 +6,8 @@ import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 public class UserBodyGenerator {
-  private User user;
-  private JWT token;
+  private final User user;
+  private final JWT token;
 
   public UserBodyGenerator(User user, JWT token) {
     this.user = user;
