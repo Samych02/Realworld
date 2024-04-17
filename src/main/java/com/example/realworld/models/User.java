@@ -1,16 +1,13 @@
 package com.example.realworld.models;
 
-import com.auth0.jwt.JWT;
-import com.example.realworld.customValidator.FieldType;
-import com.example.realworld.customValidator.Password;
-import com.example.realworld.customValidator.Unique;
+import com.example.realworld.dto.UserRegistrationDTO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
-import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Objects;
 
@@ -25,32 +22,23 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Unique(fieldType = FieldType.Email)
-  @Email(message = "Incorrect email format.")
-  @NotBlank(message = "Email address is required.")
-  @Column(unique = true)
   private String email;
 
-  @NotBlank(message = "Password is required.")
-  @Password(min = 6, max = 25)
   private String password;
 
-  @Transient
-  private JWT token;
-
-  @Unique(fieldType = FieldType.Username)
-  @Size(min = 3, max = 20, message = "Username length must be between {min} and {max}.")
-  @NotBlank(message = "Username is required.")
-  @Column(unique = true)
   private String username;
 
-  @Size(max = 255)
-  @Null
   private String bio;
 
-  @Size(max = 255)
-  @Null
   private String image;
+
+  public User(UserRegistrationDTO registrationDTO) {
+    this.email = registrationDTO.getEmail();
+    this.password = new BCryptPasswordEncoder(10).encode(registrationDTO.getPassword());
+    this.username = registrationDTO.getUsername();
+    this.bio = registrationDTO.getBio();
+    this.image = registrationDTO.getImage();
+  }
 
   @Override
   public final boolean equals(Object o) {

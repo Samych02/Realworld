@@ -6,7 +6,8 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class UniqueValidator implements ConstraintValidator<Unique, String> {
-  @Autowired private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
   private FieldType fieldType;
 
   @Override

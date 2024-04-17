@@ -1,4 +1,4 @@
-package com.example.realworld.exceptions;
+package com.example.realworld.controllers.utils;
 
 import lombok.Getter;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
@@ -9,20 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class ErrorBodyGenerator {
+public class ErrorJsonBodyBuilder {
   private final List<String> messageList = new ArrayList<>();
 
-  void addToMessageList(String message) {
+  public void addToMessageList(String message) {
     messageList.add(message);
   }
 
-  JSONObject createErrorBody() {
+  public String createErrorBody() {
     JSONObject bodyObject = new JSONObject();
     JSONArray bodyArray = new JSONArray();
     this.messageList.forEach(bodyArray::put);
     try {
       bodyObject.put("body", bodyArray);
-      return new JSONObject().put("errors", bodyObject);
+      return new JSONObject().put("errors", bodyObject).toString();
     } catch (JSONException e) {
       throw new RuntimeException(e);
     }
