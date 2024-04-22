@@ -1,20 +1,20 @@
 package com.example.realworld.controllers.advices;
 
-import com.example.realworld.controllers.utils.ErrorJsonBodyBuilder;
 import com.example.realworld.exceptions.InvalidRequestBodyException;
+import com.example.realworld.models.Error;
+import com.example.realworld.payloads.ErrorPayload;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class InvalidRequestBodyExceptionControllerAdvice {
-  @ExceptionHandler(InvalidRequestBodyException.class)
+  @ExceptionHandler({InvalidRequestBodyException.class})
   public ResponseEntity<?> exceptionInvalidRequestBodyHandler() {
-    ErrorJsonBodyBuilder errorJsonBodyBuilder = new ErrorJsonBodyBuilder();
-    errorJsonBodyBuilder.addToMessageList("Invalid request body");
+    Error error = new Error();
+    error.addMessage("Invalid request body");
     return ResponseEntity
             .badRequest()
-            .body(errorJsonBodyBuilder.createErrorBody());
+            .body(new ErrorPayload(error));
   }
-
 }

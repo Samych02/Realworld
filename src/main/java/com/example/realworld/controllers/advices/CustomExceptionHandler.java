@@ -1,9 +1,9 @@
-package com.example.realworld.exceptions;
+package com.example.realworld.controllers.advices;
 
-import com.example.realworld.controllers.utils.ErrorJsonBodyBuilder;
+import com.example.realworld.models.Error;
+import com.example.realworld.payloads.ErrorPayload;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,30 +13,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
-  /*
-  This method creates an array of all error messages raised when validating a class,
-  then send back an HTTP response with the correct status (4xx) with a body that looks
-  like the following json:
-  {
-      "errors": {
-          "body": [
-              "password is required.",
-              "email is required.",
-              "username is required."
-          ]
-      }
-  }
-  * */
+
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
           MethodArgumentNotValidException ex, @NonNull HttpHeaders headers,
           @NonNull HttpStatusCode status, @NonNull WebRequest request) {
-    ErrorJsonBodyBuilder ebg = new ErrorJsonBodyBuilder();
-    ex.getBindingResult().getAllErrors().forEach((error) -> ebg.addToMessageList(error.getDefaultMessage()));
-
+    Error error = new Error();
+    ex.getBindingResult().getAllErrors().forEach((errorMessage) -> error.addMessage(errorMessage.getDefaultMessage()));
     return ResponseEntity.status(status)
-            .contentType(MediaType.APPLICATION_JSON)
             .headers(headers)
-            .body(ebg.createErrorBody());
+            .body(new ErrorPayload(error));
   }
 }

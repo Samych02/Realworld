@@ -1,4 +1,4 @@
-package com.example.realworld.customValidator;
+package com.example.realworld.customValidators;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

@@ -1,10 +1,10 @@
 package com.example.realworld.controllers;
 
-import com.example.realworld.controllers.utils.UserPayload;
 import com.example.realworld.dto.UserAuthenticationDTO;
 import com.example.realworld.dto.UserRegistrationDTO;
 import com.example.realworld.exceptions.InvalidRequestBodyException;
 import com.example.realworld.models.User;
+import com.example.realworld.payloads.UserPayload;
 import com.example.realworld.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,15 +24,15 @@ public class UserController {
 
   @PostMapping(path = "/api/users", consumes = "application/json", produces = "application/json")
   @ResponseBody
-  public ResponseEntity<?> newUser(@Valid @RequestBody UserPayload<UserRegistrationDTO> userPayload) {
+  public ResponseEntity<?> newUser(@Valid @RequestBody UserPayload<UserRegistrationDTO> userPayloadRequest) {
     // Check if body is empty
-    if (userPayload.getUser() == null) throw new InvalidRequestBodyException();
+    if (userPayloadRequest.getUser() == null) throw new InvalidRequestBodyException();
     // Convert DTO to model
-    User newUser = new User(userPayload.getUser());
+    User newUser = new User(userPayloadRequest.getUser());
     userRepository.save(newUser);
     // Convert model to DTO
-    UserPayload<UserAuthenticationDTO> userPayloadResponse = new UserPayload<>();
-    userPayloadResponse.setUser(new UserAuthenticationDTO(newUser, null));
-    return ResponseEntity.status(HttpStatus.CREATED).body(userPayloadResponse);
+    return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(new UserPayload<>(new UserAuthenticationDTO(newUser, null)));
   }
 }

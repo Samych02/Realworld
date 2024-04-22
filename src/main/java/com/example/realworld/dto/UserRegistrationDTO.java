@@ -1,7 +1,7 @@
 package com.example.realworld.dto;
 
-import com.example.realworld.customValidator.FieldType;
-import com.example.realworld.customValidator.Unique;
+import com.example.realworld.customValidators.FieldType;
+import com.example.realworld.customValidators.Unique;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Null;
